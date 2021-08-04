@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { FormControl, FilledInput } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { postMessage, fetchConversations } from "../../store/utils/thunkCreators";
+import { postMessage } from "../../store/utils/thunkCreators";
 
 const styles = {
   root: {
@@ -76,10 +76,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     postMessage : (body) => {
       dispatch(postMessage(body));
-    },
-    fetchConversations: () => {
-      dispatch(fetchConversations());
-    },
+    }
   };
 };
 
