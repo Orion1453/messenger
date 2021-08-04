@@ -13,8 +13,17 @@ router.post("/", async (req, res, next) => {
 
     // if we already know conversation id, we can save time and just add it to message and return
     if (conversationId) {
-      const message = await Message.create({ senderId, text, conversationId });
-      return res.json({ message, sender });
+      // check if the sender and recipient all belongs to the conservation
+      const supposedConversation = await Conversation.findConversation(
+        senderId,
+        recipientId
+      );
+      if (supposedConversation && supposedConversation.id === conversationId) {
+        const message = await Message.create({ senderId, text, conversationId });
+        return res.json({ message, sender });
+      } else {
+        return res.status(400).json({"error": "Invalid action!"})
+      }
     }
     // if we don't have conversation id, find a conversation to make sure it doesn't already exist
     let conversation = await Conversation.findConversation(
