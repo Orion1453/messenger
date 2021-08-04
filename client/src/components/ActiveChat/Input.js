@@ -41,7 +41,6 @@ class Input extends Component {
       sender: this.props.conversationId ? null : this.props.user,
     };
     await this.props.postMessage(reqBody);
-    await this.props.fetchConversations();
     this.setState({
       text: "",
     });

@@ -2,6 +2,10 @@ const router = require("express").Router();
 const { Conversation, Message } = require("../../db/models");
 const onlineUsers = require("../../onlineUsers");
 
+function compareTwoSides(conversation, sender, recipient) {
+  return (sender === conversation.user1Id && recipient === conversation.user2Id) || (sender === conversation.user2Id && recipient === conversation.user1Id)
+}
+
 // expects {recipientId, text, conversationId } in body (conversationId will be null if no conversation exists yet)
 router.post("/", async (req, res, next) => {
   try {
@@ -14,11 +18,8 @@ router.post("/", async (req, res, next) => {
     // if we already know conversation id, we can save time and just add it to message and return
     if (conversationId) {
       // check if the sender and recipient all belongs to the conservation
-      const supposedConversation = await Conversation.findConversation(
-        senderId,
-        recipientId
-      );
-      if (supposedConversation && supposedConversation.id === conversationId) {
+      const supposedConversation = await Conversation.findPk(conversationId);
+      if (supposedConversation && compareTwoSides(supposedConversation, senderId, recipientId)) {
         const message = await Message.create({ senderId, text, conversationId });
         return res.json({ message, sender });
       } else {
