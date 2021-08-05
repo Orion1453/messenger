@@ -72,7 +72,7 @@ router.get("/", async (req, res, next) => {
       convoJSON.latestMessageText = convoJSON.messages[0].text;
 
       // reverse the messages order
-      convoJSON.messages = convoJSON.messages.reverse();
+      convoJSON.messages.reverse();
       conversations[i] = convoJSON;
     }
 

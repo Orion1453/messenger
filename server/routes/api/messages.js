@@ -23,7 +23,7 @@ router.post("/", async (req, res, next) => {
         const message = await Message.create({ senderId, text, conversationId });
         return res.json({ message, sender });
       } else {
-        return res.status(400).json({"error": "Invalid action!"})
+        return res.status(403).json({"error": "Forbidden action!"})
       }
     }
     // if we don't have conversation id, find a conversation to make sure it doesn't already exist
