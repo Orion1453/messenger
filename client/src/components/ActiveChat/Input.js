@@ -74,9 +74,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    postMessage: (message) => {
-      dispatch(postMessage(message));
-    },
+    postMessage : (body) => {
+      dispatch(postMessage(body));
+    }
   };
 };
 
