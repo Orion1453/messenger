@@ -7,6 +7,7 @@ import {
   setSearchedUsers,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
+import { gotUnreads } from "../unreads";
 
 axios.interceptors.request.use(async function (config) {
   const token = await localStorage.getItem("messenger-token");
@@ -73,6 +74,24 @@ export const fetchConversations = () => async (dispatch) => {
   try {
     const { data } = await axios.get("/api/conversations");
     dispatch(gotConversations(data));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const fetchUnreads = () => async (dispatch) => {
+  try {
+    const { data } = await axios.get("/api/unreads");
+    dispatch(gotUnreads(data));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const clearUnreads = (body) => async (dispatch) => {
+  try {
+    const { data } = await axios.post("/api/unreads", body);
+    dispatch(gotUnreads(data));
   } catch (error) {
     console.error(error);
   }
