@@ -49,17 +49,15 @@ router.post("/", async (req, res, next) => {
     });
     if (unread) {
       unread.unreadNum = 0;
-      await unread.save();
-      const unreads = await Unread.findAll({
-        where: {
-          recipient: recipientId
-        },
-      });
-      const unreadSet = getUnreadSet(unreads);
-      res.json(unreadSet);
-    } else {
-      res.status(400).send({"error":"Not found!"});
+      await unread.save();      
     }
+    const unreads = await Unread.findAll({
+      where: {
+        recipient: recipientId
+      },
+    });
+    const unreadSet = getUnreadSet(unreads);
+    res.json(unreadSet);
   } catch (error) {
     next(error);
   }
