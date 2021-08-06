@@ -26,7 +26,7 @@ const ActiveChat = (props) => {
   const conversation = props.conversation || {};
 
   return (
-    <Box className={classes.root}>
+    <Box className={classes.root} bgcolor="white">
       {conversation.otherUser && (
         <>
           <Header

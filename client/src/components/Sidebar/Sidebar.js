@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
   root: {
     paddingLeft: 21,
     paddingRight: 21,
-    flexGrow: 1
+    flexGrow: 1,
   },
   title: {
     fontSize: 20,
@@ -26,7 +26,7 @@ const Sidebar = (props) => {
   const { handleChange, searchTerm } = props;
 
   return (
-    <Box className={classes.root}>
+    <Box className={classes.root} bgcolor="white">
       <CurrentUser />
       <Typography className={classes.title}>Chats</Typography>
       <Search handleChange={handleChange} />

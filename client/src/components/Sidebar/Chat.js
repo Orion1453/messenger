@@ -10,7 +10,7 @@ const styles = {
   root: {
     borderRadius: 8,
     height: 80,
-    boxShadow: "0 2px 10px 0 rgba(88,133,196,0.05)",
+    boxShadow: "10px 10px 10px 0 rgba(88,133,196,0.05)",
     marginBottom: 10,
     display: "flex",
     alignItems: "center",
@@ -34,8 +34,15 @@ class Chat extends Component {
     const otherUser = this.props.conversation.otherUser;
     const invisible = this.props.invisible;
     const unreadNum = this.props.unreadNum;
+    const activeChat = this.props.activeChat;
+    let color;
+    if (otherUser.id === activeChat) {
+      color = "#FFFFFF";
+    } else {
+      color = "#FCFFFF ";
+    }
     return (
-      <Box
+      <Box bgcolor={color}
         onClick={() => this.handleClick(this.props.conversation)}
         className={classes.root}
       >
@@ -52,6 +59,12 @@ class Chat extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    activeChat: state.activeConversation,
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     setActiveChat: (id) => {
@@ -63,4 +76,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(Chat));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Chat));
