@@ -8,16 +8,20 @@ import { clearUnreads } from "../../store/utils/thunkCreators";
 
 const styles = {
   root: {
+    display: "flex",
+    width: "90%"
+  },
+  row: {
+    display: "flex",
     borderRadius: 8,
     height: 80,
     boxShadow: "10px 10px 10px 0 rgba(88,133,196,0.05)",
     marginBottom: 10,
-    display: "flex",
     alignItems: "center",
     "&:hover": {
       cursor: "grab",
     },
-  },
+  }
 };
 
 class Chat extends Component {
@@ -42,10 +46,10 @@ class Chat extends Component {
       color = "#FCFFFF ";
     }
     return (
-      <Box bgcolor={color}
+      <Box bgcolor={color} className={classes.row}>
+        <Box
         onClick={() => this.handleClick(this.props.conversation)}
-        className={classes.root}
-      >
+        className={classes.root}>
         <BadgeAvatar
           photoUrl={otherUser.photoUrl}
           username={otherUser.username}
@@ -53,7 +57,8 @@ class Chat extends Component {
           sidebar={true}
         />
         <ChatContent conversation={this.props.conversation} />
-        <Badge badgeContent={unreadNum} color="primary" invisible={invisible}></Badge>
+      </Box>
+      <Badge badgeContent={unreadNum} color="primary" invisible={invisible} max={99}></Badge>
       </Box>
     );
   }
