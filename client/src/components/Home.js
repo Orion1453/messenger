@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { Grid, CssBaseline, Button } from "@material-ui/core";
 import { SidebarContainer } from "./Sidebar";
 import { ActiveChat } from "./ActiveChat";
-import { logout, fetchConversations, fetchUnreads } from "../store/utils/thunkCreators";
+import { logout, fetchNeededData, clearUnreads } from "../store/utils/thunkCreators";
 import { clearOnLogout } from "../store/index";
 
 const styles = {
@@ -28,11 +28,16 @@ class Home extends Component {
         isLoggedIn: true,
       });
     }
+    if (this.props.activeChat !== "") {
+      const reqBody = {
+        sender: this.props.activeChat
+      };
+      this.props.clearUnreads(reqBody);
+    }
   }
 
   componentDidMount() {
-    this.props.fetchConversations();
-    this.props.fetchUnreads();
+    this.props.fetchNeededData();
   }
 
   handleLogout = async () => {
@@ -67,6 +72,7 @@ const mapStateToProps = (state) => {
     user: state.user,
     conversations: state.conversations,
     unreads: state.unreads,
+    activeChat: state.activeConversation,
   };
 };
 
@@ -76,11 +82,11 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(logout(id));
       dispatch(clearOnLogout());
     },
-    fetchConversations: () => {
-      dispatch(fetchConversations());
+    fetchNeededData: () => {
+      dispatch(fetchNeededData());
     },
-    fetchUnreads: () => {
-      dispatch(fetchUnreads());
+    clearUnreads: (body) => {
+      dispatch(clearUnreads(body));
     },
   };
 };

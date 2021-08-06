@@ -25,7 +25,7 @@ class Chat extends Component {
     const reqBody = {
       sender: this.props.conversation.otherUser.id,
     };
-    await this.props.setActiveChat(conversation.otherUser.username);
+    await this.props.setActiveChat(conversation.otherUser.id);
     await this.props.clearUnreads(reqBody);
   };
 

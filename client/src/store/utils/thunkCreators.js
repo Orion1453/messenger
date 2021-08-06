@@ -70,19 +70,22 @@ export const logout = (id) => async (dispatch) => {
 
 // CONVERSATIONS THUNK CREATORS
 
-export const fetchConversations = () => async (dispatch) => {
-  try {
-    const { data } = await axios.get("/api/conversations");
-    dispatch(gotConversations(data));
-  } catch (error) {
-    console.error(error);
-  }
+const fetchConversations = async () => {
+  const { data } = await axios.get("/api/conversations");
+  return data;
 };
 
-export const fetchUnreads = () => async (dispatch) => {
+const fetchUnreads = async () => {
+  const { data } = await axios.get("/api/unreads");
+  return data;
+};
+
+export const fetchNeededData = () => async (dispatch) => {
   try {
-    const { data } = await axios.get("/api/unreads");
-    dispatch(gotUnreads(data));
+    const conversationsData = await fetchConversations();
+    dispatch(gotConversations(conversationsData));
+    const unreadsData = await fetchUnreads();
+    dispatch(gotUnreads(unreadsData));
   } catch (error) {
     console.error(error);
   }
