@@ -1,7 +1,19 @@
 const router = require("express").Router();
-const { User, Conversation, Message } = require("../../db/models");
+const { User, Conversation, Message, Unread } = require("../../db/models");
 const { Op } = require("sequelize");
 const onlineUsers = require("../../onlineUsers");
+
+function getUnreadSet(unreads) {
+  const unreadSet = {};
+  
+  for (let i = 0; i < unreads.length; i++) {
+    const unread = unreads[i];
+    const unreadJSON = unread.toJSON();
+    unreadSet[unread.sender] = unreadJSON;
+  }
+  
+  return unreadSet
+}
 
 // get all conversations for a user, include latest message text for preview, and all messages
 // include other user model so we have info on username/profile pic (don't include current user info)
@@ -76,7 +88,17 @@ router.get("/", async (req, res, next) => {
       conversations[i] = convoJSON;
     }
 
-    res.json(conversations);
+    const unreads = await Unread.findAll({
+      where: {
+        recipient: userId
+      },
+    });
+    const unreadSet = getUnreadSet(unreads);
+
+    res.json({
+      conversations: conversations,
+      unreads: unreadSet,
+    });
   } catch (error) {
     next(error);
   }

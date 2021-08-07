@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
   root: {
     paddingLeft: 21,
     paddingRight: 21,
-    flexGrow: 1
+    flexGrow: 1,
   },
   title: {
     fontSize: 20,
@@ -22,17 +22,26 @@ const useStyles = makeStyles(() => ({
 const Sidebar = (props) => {
   const classes = useStyles();
   const conversations = props.conversations || [];
+  const unreads = props.unreads || {};
   const { handleChange, searchTerm } = props;
 
   return (
-    <Box className={classes.root}>
+    <Box className={classes.root} bgcolor="white">
       <CurrentUser />
       <Typography className={classes.title}>Chats</Typography>
       <Search handleChange={handleChange} />
       {conversations
         .filter((conversation) => conversation.otherUser.username.includes(searchTerm))
         .map((conversation) => {
-          return <Chat conversation={conversation} key={conversation.otherUser.username} />;
+          let unreadNum, invisible;
+          if (unreads[conversation.otherUser.id] && unreads[conversation.otherUser.id].unreadNum > 0) {
+            unreadNum = unreads[conversation.otherUser.id].unreadNum;
+            invisible = false;
+          } else {
+            unreadNum = 0;
+            invisible = true;
+          }
+          return <Chat conversation={conversation} unreadNum={unreadNum} invisible={invisible} key={conversation.otherUser.username} />;
         })}
     </Box>
   );
@@ -40,7 +49,8 @@ const Sidebar = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    conversations: state.conversations
+    conversations: state.conversations,
+    unreads: state.unread,
   };
 };
 

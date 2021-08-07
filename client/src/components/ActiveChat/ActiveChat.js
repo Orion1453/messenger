@@ -26,7 +26,7 @@ const ActiveChat = (props) => {
   const conversation = props.conversation || {};
 
   return (
-    <Box className={classes.root}>
+    <Box className={classes.root} bgcolor="white">
       {conversation.otherUser && (
         <>
           <Header
@@ -57,7 +57,7 @@ const mapStateToProps = (state) => {
     conversation:
       state.conversations &&
       state.conversations.find(
-        (conversation) => conversation.otherUser.username === state.activeConversation
+        (conversation) => conversation.otherUser.id === state.activeConversation
       )
   };
 };

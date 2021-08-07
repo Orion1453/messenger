@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Conversation, Message } = require("../../db/models");
+const { Conversation, Message, Unread } = require("../../db/models");
 const onlineUsers = require("../../onlineUsers");
 
 function compareTwoSides(conversation, sender, recipient) {
@@ -20,6 +20,22 @@ router.post("/", async (req, res, next) => {
       // check if the sender and recipient all belongs to the conservation
       const supposedConversation = await Conversation.findPk(conversationId);
       if (supposedConversation && compareTwoSides(supposedConversation, senderId, recipientId)) {
+        // update unread status
+        const unread = await Unread.findOne({
+          where: {
+            sender: senderId,
+            recipient: recipientId,
+          }
+        });
+        if (unread) {
+          unread.unreadNum += 1;
+          await unread.save();
+        } else {
+          await Unread.create({
+            sender: senderId, 
+            recipient: recipientId, 
+            unreadNum: 1});
+        }
         const message = await Message.create({ senderId, text, conversationId });
         return res.json({ message, sender });
       } else {
@@ -42,6 +58,11 @@ router.post("/", async (req, res, next) => {
         sender.online = true;
       }
     }
+    await Unread.create({
+      sender: senderId, 
+      recipient: recipientId, 
+      unreadNum: 1
+    });
     const message = await Message.create({
       senderId,
       text,
