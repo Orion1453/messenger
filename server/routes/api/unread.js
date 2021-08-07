@@ -13,25 +13,6 @@ function getUnreadSet(unreads) {
   return unreadSet
 }
 
-// get all unread status for a user
-router.get("/", async (req, res, next) => {
-    try {
-      if (!req.user) {
-        return res.sendStatus(401);
-      }
-      const userId = req.user.id;
-      const unreads = await Unread.findAll({
-        where: {
-          recipient: userId
-        },
-      });
-      const unreadSet = getUnreadSet(unreads);
-      res.json(unreadSet);
-    } catch (error) {
-      next(error);
-    }
-});
-
 // clear the unread number
 router.post("/", async (req, res, next) => {
   try {

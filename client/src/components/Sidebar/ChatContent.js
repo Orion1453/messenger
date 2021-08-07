@@ -32,7 +32,7 @@ const ChatContent = (props) => {
   const { conversation } = props;
   const { latestMessageText, otherUser } = conversation;
 
-  const unreads = props.unread || {};
+  const unreads = props.unreads || {};
   let display1, display2;
   if (unreads[otherUser.id] && unreads[otherUser.id].unreadNum > 0) {
     display1 = "none";
