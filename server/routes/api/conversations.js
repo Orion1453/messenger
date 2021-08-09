@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const { User, Conversation, Message, Unread } = require("../../db/models");
 const { Op } = require("sequelize");
-const onlineUsers = require("../../onlineUsers");
 
 function getUnreadSet(unreads) {
   const unreadSet = {};
@@ -71,13 +70,6 @@ router.get("/", async (req, res, next) => {
       } else if (convoJSON.user2) {
         convoJSON.otherUser = convoJSON.user2;
         delete convoJSON.user2;
-      }
-
-      // set property for online status of the other user
-      if (onlineUsers.includes(convoJSON.otherUser.id)) {
-        convoJSON.otherUser.online = true;
-      } else {
-        convoJSON.otherUser.online = false;
       }
 
       // set properties for notification count and latest message preview

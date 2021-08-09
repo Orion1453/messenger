@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const { Conversation, Message, Unread } = require("../../db/models");
-const onlineUsers = require("../../onlineUsers");
 
 function compareTwoSides(conversation, sender, recipient) {
   return (sender === conversation.user1Id && recipient === conversation.user2Id) || (sender === conversation.user2Id && recipient === conversation.user1Id)
@@ -54,9 +53,6 @@ router.post("/", async (req, res, next) => {
         user1Id: senderId,
         user2Id: recipientId,
       });
-      if (onlineUsers.includes(sender.id)) {
-        sender.online = true;
-      }
     }
     await Unread.create({
       sender: senderId, 

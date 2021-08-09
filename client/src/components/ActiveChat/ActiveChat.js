@@ -24,6 +24,12 @@ const ActiveChat = (props) => {
   const classes = useStyles();
   const { user } = props;
   const conversation = props.conversation || {};
+  let online;
+  if (conversation.otherUser) {
+    online = props.onlineUsers.includes(conversation.otherUser.id);
+  } else {
+    online = false;
+  }
 
   return (
     <Box className={classes.root} bgcolor="white">
@@ -31,7 +37,7 @@ const ActiveChat = (props) => {
         <>
           <Header
             username={conversation.otherUser.username}
-            online={conversation.otherUser.online || false}
+            online={online}
           />
           <Box className={classes.chatContainer}>
             <Messages
@@ -54,6 +60,7 @@ const ActiveChat = (props) => {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    onlineUsers: state.onlineUsers,
     conversation:
       state.conversations &&
       state.conversations.find(
