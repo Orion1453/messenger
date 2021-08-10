@@ -1,13 +1,10 @@
 import io from "socket.io-client";
 import store from "./store";
 import {
-  setNewMessage
-} from "./store/conversations";
-import {
+  setNewMessage,
   removeOfflineUser,
   addOnlineUser
-} from "./store/onlineUsers";
-
+} from "./store/conversations";
 
 const socket = io(window.location.origin);
 

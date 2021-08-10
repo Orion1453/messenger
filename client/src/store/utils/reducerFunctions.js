@@ -24,6 +24,30 @@ export const addMessageToStore = (state, payload) => {
   });
 };
 
+export const addOnlineUserToStore = (state, id) => {
+  return state.map((convo) => {
+    if (convo.otherUser.id === id) {
+      const convoCopy = { ...convo };
+      convoCopy.otherUser.online = true;
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  });
+};
+
+export const removeOfflineUserFromStore = (state, id) => {
+  return state.map((convo) => {
+    if (convo.otherUser.id === id) {
+      const convoCopy = { ...convo };
+      convoCopy.otherUser.online = false;
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  });
+};
+
 export const addSearchedUsersToStore = (state, users) => {
   const currentUsers = {};
 

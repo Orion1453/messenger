@@ -36,7 +36,6 @@ class Chat extends Component {
   render() {
     const { classes } = this.props;
     const otherUser = this.props.conversation.otherUser;
-    const online = this.props.onlineUsers.includes(otherUser.id);
     const invisible = this.props.invisible;
     const unreadNum = this.props.unreadNum;
     const activeChat = this.props.activeChat;
@@ -54,7 +53,7 @@ class Chat extends Component {
         <BadgeAvatar
           photoUrl={otherUser.photoUrl}
           username={otherUser.username}
-          online={online}
+          online={otherUser.online}
           sidebar={true}
         />
         <ChatContent conversation={this.props.conversation} />
@@ -68,7 +67,6 @@ class Chat extends Component {
 const mapStateToProps = (state) => {
   return {
     activeChat: state.activeConversation,
-    onlineUsers: state.onlineUsers,
   };
 };
 
