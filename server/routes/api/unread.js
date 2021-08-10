@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Unread } = require("../../db/models");
+const { Unreads } = require("../../db/models");
 
 function getUnreadSet(unreads) {
   const unreadSet = {};
@@ -7,7 +7,7 @@ function getUnreadSet(unreads) {
   for (let i = 0; i < unreads.length; i++) {
     const unread = unreads[i];
     const unreadJSON = unread.toJSON();
-    unreadSet[unread.sender] = unreadJSON;
+    unreadSet[unread.senderId] = unreadJSON;
   }
   
   return unreadSet
@@ -22,19 +22,19 @@ router.post("/", async (req, res, next) => {
 
     const recipientId = req.user.id;
     const senderId = req.body.sender;
-    const unread = await Unread.findOne({
+    const unread = await Unreads.findOne({
       where: {
-        sender: senderId,
-        recipient: recipientId,
+        senderId: senderId,
+        recipientId: recipientId,
       },
     });
     if (unread) {
       unread.unreadNum = 0;
       await unread.save();      
     }
-    const unreads = await Unread.findAll({
+    const unreads = await Unreads.findAll({
       where: {
-        recipient: recipientId
+        recipientId: recipientId
       },
     });
     const unreadSet = getUnreadSet(unreads);

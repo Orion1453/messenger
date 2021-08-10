@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { User, Conversation, Message, Unread } = require("../../db/models");
+const { User, Conversation, Message, Unreads } = require("../../db/models");
 const { Op } = require("sequelize");
 const onlineUsers = require("../../onlineUsers");
 
@@ -9,7 +9,7 @@ function getUnreadSet(unreads) {
   for (let i = 0; i < unreads.length; i++) {
     const unread = unreads[i];
     const unreadJSON = unread.toJSON();
-    unreadSet[unread.sender] = unreadJSON;
+    unreadSet[unread.senderId] = unreadJSON;
   }
   
   return unreadSet
@@ -88,9 +88,9 @@ router.get("/", async (req, res, next) => {
       conversations[i] = convoJSON;
     }
 
-    const unreads = await Unread.findAll({
+    const unreads = await Unreads.findAll({
       where: {
-        recipient: userId
+        recipientId: userId
       },
     });
     const unreadSet = getUnreadSet(unreads);
