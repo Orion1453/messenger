@@ -35,6 +35,7 @@ io.use(function(socket, next){
   if (socket.handshake.query && socket.handshake.query.token){
     jwt.verify(socket.handshake.query.token, process.env.SESSION_SECRET, function(err, decoded) {
       if (err) return next(new Error('Authentication error'));
+      socket.id = decoded.id;
       next();
     });
   }
@@ -43,6 +44,7 @@ io.use(function(socket, next){
   }    
 })
 .on("connection", (socket) => {
+  socket.join(socket.id);
   socket.on("go-online", (id) => {
     onlineUsers.add(id)
     // send the user who just went online to everyone else who is already online
@@ -50,7 +52,7 @@ io.use(function(socket, next){
   });
 
   socket.on("new-message", (data) => {
-    socket.broadcast.emit("new-message", {
+    socket.to(data.recipientId).emit("new-message", {
       message: data.message,
       sender: data.sender,
     });
@@ -58,6 +60,7 @@ io.use(function(socket, next){
 
   socket.on("logout", (id) => {
     onlineUsers.delete(id);
+    socket.leave(socket.id);
     socket.broadcast.emit("remove-offline-user", id);
   });
 });

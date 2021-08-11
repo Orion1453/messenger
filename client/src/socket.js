@@ -15,12 +15,12 @@ const socket = io(window.location.origin, {
 socket.on("connect", () => {
   console.log("connected to server");
 
-  socket.on("add-online-user", (onlineUsers) => {
-    store.dispatch(addOnlineUser(onlineUsers));
+  socket.on("add-online-user", (id) => {
+    store.dispatch(addOnlineUser(id));
   });
 
-  socket.on("remove-offline-user", (onlineUsers) => {
-    store.dispatch(removeOfflineUser(onlineUsers));
+  socket.on("remove-offline-user", (id) => {
+    store.dispatch(removeOfflineUser(id));
   });
 
   socket.on("new-message", (data) => {
