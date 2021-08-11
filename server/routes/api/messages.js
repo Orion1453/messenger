@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Conversation, Message, Unread } = require("../../db/models");
+const { Conversation, Message, Unreads } = require("../../db/models");
 const onlineUsers = require("../../onlineUsers");
 
 function compareTwoSides(conversation, sender, recipient) {
@@ -21,19 +21,19 @@ router.post("/", async (req, res, next) => {
       const supposedConversation = await Conversation.findPk(conversationId);
       if (supposedConversation && compareTwoSides(supposedConversation, senderId, recipientId)) {
         // update unread status
-        const unread = await Unread.findOne({
+        const unread = await Unreads.findOne({
           where: {
-            sender: senderId,
-            recipient: recipientId,
+            senderId: senderId,
+            recipientId: recipientId,
           }
         });
         if (unread) {
           unread.unreadNum += 1;
           await unread.save();
         } else {
-          await Unread.create({
-            sender: senderId, 
-            recipient: recipientId, 
+          await Unreads.create({
+            senderId: senderId, 
+            recipientId: recipientId, 
             unreadNum: 1});
         }
         const message = await Message.create({ senderId, text, conversationId });
@@ -54,13 +54,13 @@ router.post("/", async (req, res, next) => {
         user1Id: senderId,
         user2Id: recipientId,
       });
-      if (onlineUsers.includes(sender.id)) {
+      if (onlineUsers.has(sender.id)) {
         sender.online = true;
       }
     }
-    await Unread.create({
-      sender: senderId, 
-      recipient: recipientId, 
+    await Unreads.create({
+      senderId: senderId, 
+      recipientId: recipientId, 
       unreadNum: 1
     });
     const message = await Message.create({

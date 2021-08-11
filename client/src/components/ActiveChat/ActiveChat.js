@@ -31,7 +31,7 @@ const ActiveChat = (props) => {
         <>
           <Header
             username={conversation.otherUser.username}
-            online={conversation.otherUser.online || false}
+            online={conversation.otherUser.online}
           />
           <Box className={classes.chatContainer}>
             <Messages
